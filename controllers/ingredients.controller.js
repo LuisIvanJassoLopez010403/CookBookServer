@@ -39,7 +39,7 @@ const getAllIngredients = async (req, res) => {
 // Obtener un ingrediente por ID
 async function getIngredientById(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         // Verificar si el ID es válido y si el ingrediente existe
         const ingredient = await ingredientsModel.findById(id);
@@ -57,7 +57,7 @@ async function getIngredientById(req, res) {
 // Actualizar un ingrediente
 async function updateIngredient(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
         const { nameIngredient, category } = req.body;
 
         if (!nameIngredient || !category) {
@@ -67,11 +67,6 @@ async function updateIngredient(req, res) {
         const existingIngredient = await ingredientsModel.findById(id);
         if (!existingIngredient) {
             return res.status(404).json({ error: 'Ingrediente no encontrado.' });
-        }
-
-        const existingName = await ingredientsModel.findOne({ nameIngredient });
-        if (existingName) {
-            return res.status(400).json({ error: 'El ingrediente ya existe.' });
         }
 
         existingIngredient.nameIngredient = nameIngredient;
@@ -87,7 +82,7 @@ async function updateIngredient(req, res) {
 
 async function deleteIngredient(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         const ingredient = await ingredientsModel.findByIdAndDelete(id);
 
