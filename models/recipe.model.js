@@ -62,7 +62,7 @@ const recipeSchema = new mongoose.Schema({
         required: false
     }
 });
-
+//se agrega comentario prueba para subir cambios
 const recipeModel = mongoose.model('Recipe', recipeSchema);
 
 module.exports = {
