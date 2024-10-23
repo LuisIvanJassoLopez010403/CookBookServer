@@ -6,7 +6,7 @@ const {
 const IngredientsSchema = new mongoose.Schema({
     _idIngredient:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ingredient',
+        ref: 'Ingredients',
         required: true
     },
     unit: {
@@ -43,13 +43,15 @@ const recipeSchema = new mongoose.Schema({
     video: {
         type: String
     },
-    Categoria: {
+    categoria: {
         type: CategoriaModel,
         required: true
     },
-    //autor: {
-
-    //}
+    autor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Users',
+        required: true
+    },
     Calificacion: {
         type: Number,
         required: true
