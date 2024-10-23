@@ -26,19 +26,18 @@ const {
     getAllRecipes
 } = require('../controllers/recipe.controller');
 
-
-
 const {
-    searchRecipes
-} = require('../controllers/search.controller');
-
-/*const {
     createList,
     getAllLists,
     getListById,
     updateList,
     deleteList
-} = require('../controllers/list.controller');*/
+} = require('../controllers/lists.controller');
+
+const {
+    searchRecipes
+} = require('../controllers/search.controller');
+
 
 router.post('/signup',signup);
 router.post('/login',login);
@@ -57,8 +56,13 @@ router.get('/get-ingredient', getIngredientById);
 router.post('/update-ingredient', updateIngredient);
 router.post('/delete-ingredient', deleteIngredient);
 
+router.post('/create-list', createList);
+router.get('/get-all-lists', getAllLists);
+router.get('/get-list', getListById);
+router.post('/update-list', updateList);
+router.post('/delete-list', deleteList);
+
 router.get('/get-user-lists',authenticateToken,getUserLists);
 router.post('/search-recipe',authenticateToken,searchRecipes);
-
 
 module.exports = router;

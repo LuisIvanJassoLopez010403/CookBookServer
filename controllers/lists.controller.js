@@ -1,94 +1,98 @@
-const mongoose = require('mongoose');
+const { listModel } = require('../models/lists.model');
 
-// Crear un nuevo listado (POST /lists)
-const createList = async (req, res) => {
-
+async function createList(req, res) {
     try {
-        const { name, image, description, recipes } = req.body;
+        const { nameList, image, description, recipes } = req.body;
 
-        // Crear un nuevo listado
+        if (!nameList) {
+            return res.status(400).json({ message: 'El nombre de la lista es obligatorio' });
+        }
+        if (!recipes || recipes.length === 0) {
+            return res.status(400).json({ message: 'Debe incluir al menos una receta en la lista' });
+        }
+
         const newList = new listModel({
-            name,
+            nameList,
             image,
             description,
             recipes
-            
         });
 
-        // Guardar el listado en la base de datos  (Estatus 200 confirmado y 500 error)
         await newList.save();
-        res.status(201).json({ message: 'Listado creado con éxito', list: newList });
+        res.status(201).json({ message: 'Lista creada con éxito', list: newList });
     } catch (error) {
-        res.status(500).json({ message: 'Error al crear el listado', error });
+        res.status(500).json({ message: 'Error al crear la lista', error: error.message });
     }
-};
+}
 
-// Obtener todos los listados (GET /lists)
-const getAllLists = async (req, res) => {
+async function getAllLists(req, res) {
     try {
-        const lists = await listModel.find();
+        const lists = await listModel.find().populate('recipes'); 
         res.status(200).json(lists);
     } catch (error) {
-        res.status(500).json({ message: 'Error al obtener los listados', error });
+        res.status(500).json({ message: 'Error al obtener las listas', error: error.message });
     }
-};
+}
 
-// Obtener un listado por ID (GET /lists/:id)
-const getListById = async (req, res) => {
+async function getListById(req, res) {
     try {
-        const { id } = req.params;
-        const list = await listModel.findById(id);
+        const { id } = req.body;
+        const list = await listModel.findById(id).populate('recipes');
 
         if (!list) {
-            return res.status(404).json({ message: 'Listado no encontrado' });
+            return res.status(404).json({ message: 'Lista no encontrada' });
         }
 
         res.status(200).json(list);
     } catch (error) {
-        res.status(500).json({ message: 'Error al obtener el listado', error });
+        res.status(500).json({ message: 'Error al obtener la lista', error: error.message });
     }
-};
+}
 
-// Actualizar un listado 
-const updateList = async (req, res) => {
+async function updateList(req, res) {
     try {
-        const { id } = req.params;
-        const { name, image, description, recipes} = req.body;
+        const { id } = req.body;
+        const { nameList, image, description, recipes } = req.body;
 
-        const updatedList = await listModel.findByIdAndUpdate(id, {
-            name,
-            image,
-            description,
-            recipes
-            
-        }, { new: true });
-
-        if (!updatedList) {
-            return res.status(404).json({ message: 'Listado no encontrado' });
+        if (!nameList) {
+            return res.status(400).json({ message: 'El nombre de la lista es obligatorio' });
+        }
+        if (!recipes || recipes.length === 0) {
+            return res.status(400).json({ message: 'Debe incluir al menos una receta en la lista' });
         }
 
-        res.status(200).json({ message: 'Listado actualizado con éxito', list: updatedList });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar el listado', error });
-    }
-};
+        const updatedList = await listModel.findByIdAndUpdate(
+            id, 
+            { nameList, image, description, recipes }, 
+            { new: true }
+        ).populate('recipes');
 
-// Eliminar un listado (DELETE /lists/:id) 
-const deleteList = async (req, res) => {
+        if (!updatedList) {
+            return res.status(404).json({ message: 'Lista no encontrada' });
+        }
+
+        res.status(200).json({ message: 'Lista actualizada con éxito', list: updatedList });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar la lista', error: error.message });
+    }
+}
+
+// Eliminar una lista
+async function deleteList(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         const deletedList = await listModel.findByIdAndDelete(id);
 
         if (!deletedList) {
-            return res.status(404).json({ message: 'Listado no encontrado' });
+            return res.status(404).json({ message: 'Lista no encontrada' });
         }
 
-        res.status(200).json({ message: 'Listado eliminado con éxito' });
+        res.status(200).json({ message: 'Lista eliminada con éxito' });
     } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar el listado', error });
+        res.status(500).json({ message: 'Error al eliminar la lista', error: error.message });
     }
-};
+}
 
 module.exports = {
     createList,
