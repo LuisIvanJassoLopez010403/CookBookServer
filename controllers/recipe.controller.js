@@ -1,53 +1,86 @@
 var express = require('express');
 var router = express.Router();
-const {
-    RecipeModel
-} = require('../models/recipe.model');
+const { recipeModel } = require('../models/recipe.model');
 
 async function createRecipe(req, res) {
-    const nameRecipe = req.body.nameRacipe;
-    const ingredients = req.body.ingredients;
-    const steps = req.body.steps;
-
     try{
-        if(!nameRecipe <= 0){
-            return res.status(400).json({
-                error: 'El nombre de la receta es obligatorio'
-            });
-        }else if (!ingredients <= 0){
-            return res.status(400).json({
-                error: 'Los ingredientes son obligatorios'
-            });
-        }else if (!steps <= 0){
-            return res.status(400).json({
-                error: 'Los pasos son obligatorios'
-            });
+        const {nameRecipe, ingredients, steps} = req.body
+        const user = req.user
+        if (!nameRecipe){
+            return res.status(404).json({ message: 'La receta debe llevar un nombre' });
+        } else if (!ingredients)  {
+            return res.status(404).json({ message: 'Falta llenar el campo de ingredientes' });
+        } else if (!steps){
+            return res.status(404).json({message: 'No has establecido los pasos de tu receta'})
         }
 
-        const newRecipe = new RecipeModel({
-            newRecipe: newRecipe,
-            ingredients: ingredients,
-            steps: steps
-        });
-        await newRecipe.save();
-        return res.status(201).json(newRecipe);
+        const newReceta = new recipeModel({
+            nameRecipe,
+            ingredients,
+            steps,
+            autor: user._id
+        })
+
+        await newReceta.save();
+        res.status(200).json({ message: 'Receta creada exitosamente', receta: newReceta});
     }catch (error){
-        return res.status(500).json('Error al crear la receta', error);
+        res.status(500).json({ error: 'Error en el servidor.' });
     }
 }
 
-async function Editar(req, res) {
-    const editrecipe = await RecipeModel.findById(id_receta);
-
+async function updateRecipe (req, res) {
     try {
-        if (!id_receta) {
-            return res.status(500).json('Error al Encontrar la Receta', error);
+        const updateRecipe = await recipeModel.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        if (!updateRecipe) {
+            return res.status(404).json({ message: 'Receta no Encontrada' });
         }
-
-        const editrecipe = await RecipeModel.findById(id_receta);
-        const recipes = await RecipeModel.find();
-        return res.status(200).json(recipes);
+        res.status(200).json(updateRecipe);
     } catch (error) {
-        return res.status(500).json('Error al obtener las recetas', error);
+        res.status(400).json({ message: error.message });
     }
-}
+};
+
+async function deleteRecipe (req, res) {
+    try {
+        const deleterecipe = await recipeModel.findByIdAndDelete(req.params.id);
+        if (!deleterecipe) {
+            return res.status(404).json({ message: 'Receta no encontrada' });
+        }
+        res.status(200).json({ message: 'Receta eliminada'});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+async function getRecipe (req, res) {
+    try {
+        const recipe = await recipeModel.findById(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ message: 'Receta no encontrada' });
+        }
+        res.status(200).json(recipe);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+async function getAllRecipes(res) {
+    try {
+        const recipes = await recipeModel.find();
+        res.status(200).json(recipes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {
+    createRecipe,
+    updateRecipe,
+    deleteRecipe,
+    getRecipe,
+    getAllRecipes
+};
