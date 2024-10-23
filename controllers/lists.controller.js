@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 // Crear un nuevo listado (POST /lists)
 const createList = async (req, res) => {
-    
+
     try {
-        const { name, image, description, recipes, recetaDefault } = req.body;
+        const { name, image, description, recipes } = req.body;
 
         // Crear un nuevo listado
         const newList = new listModel({
             name,
             image,
             description,
-            recipes,
-            recetaDefault
+            recipes
+            
         });
 
-        // Guardar el listado en la base de datos
+        // Guardar el listado en la base de datos  (Estatus 200 confirmado y 500 error)
         await newList.save();
         res.status(201).json({ message: 'Listado creado con éxito', list: newList });
     } catch (error) {
@@ -49,18 +49,18 @@ const getListById = async (req, res) => {
     }
 };
 
-// Actualizar un listado (PUT /lists/:id)
+// Actualizar un listado 
 const updateList = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, image, description, recipes, recetaDefault } = req.body;
+        const { name, image, description, recipes} = req.body;
 
         const updatedList = await listModel.findByIdAndUpdate(id, {
             name,
             image,
             description,
-            recipes,
-            recetaDefault
+            recipes
+            
         }, { new: true });
 
         if (!updatedList) {
@@ -73,7 +73,7 @@ const updateList = async (req, res) => {
     }
 };
 
-// Eliminar (lógicamente) un listado (DELETE /lists/:id)
+// Eliminar un listado (DELETE /lists/:id) 
 const deleteList = async (req, res) => {
     try {
         const { id } = req.params;
