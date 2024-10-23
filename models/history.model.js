@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 
 const historySchema = new mongoose.Schema({
-  idUsers: {
-    type: [mongoose.Types.ObjectId], 
-    ref: "Users" 
+  idUser: {
+    type: mongoose.Types.ObjectId, //Un solo usua
+    ref: "Users", 
+    required: true
   },
   idRecipe: {
-    type: [mongoose.Types.ObjectId], 
-    ref: "Recipes" 
-
+    type: mongoose.Types.ObjectId, // Una sola receta
+    ref: "Recipe", 
+    required: true
   },
   date: {
-    type: Number
-
+    type: Number, // Timestamp para almacenar la fecha
+    default: Date.now // Almacenar la fecha actual como valor por defecto
   }
-
 });
 
 const historyModel = mongoose.model('History', historySchema);
@@ -22,6 +22,7 @@ const historyModel = mongoose.model('History', historySchema);
 module.exports = {
   historyModel
 }
+
 
 
 
