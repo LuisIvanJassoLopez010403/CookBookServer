@@ -4,11 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
-const {
+/*const {
   mongoURL
-} = require('./config').variablesDeConfiguracion;
+} = require('./config').variablesDeConfiguracion;*/
 
-const databaseUrl = mongoURL;
+
+const databaseUrl = "mongodb+srv://user_1:fmGK2fU90Jb0gRnO@practica.m94ua.mongodb.net/cookbook";
+
+//const databaseUrl = mongoURL;
 
 mongoose.connect(databaseUrl,{
   useNewUrlParser: true

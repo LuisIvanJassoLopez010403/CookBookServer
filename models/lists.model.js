@@ -7,15 +7,13 @@ const listSchema = new mongoose.Schema({
   },
   image: {
     type: String
-
   },
   description: {
-    type: String,
-
+    type: String
   },
   recipes: {
-    type: [mongoose.Types.ObjectId], 
-        ref: "Historial"                    //Cambiar ref a recetas
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Recipe"
   }, 
   recetaDefault: {
     type: Boolean, 
