@@ -26,7 +26,7 @@ const recipeSchema = new mongoose.Schema({
     },
     preptime: {
         type: String,
-        required: true
+        required: false
     },
     ingredients: {
         type: [IngredientsSchema],
@@ -38,14 +38,15 @@ const recipeSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     video: {
-        type: String
+        type: String,
+        required: false
     },
     categoria: {
-        type: CategoriaModel,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Categoria'
     },
     autor: {
         type: mongoose.Schema.Types.ObjectId,
@@ -54,16 +55,16 @@ const recipeSchema = new mongoose.Schema({
     },
     Calificacion: {
         type: Number,
-        required: true
+        required: false
     },
     Fecha: {
         type: Date,
-        required: true
+        required: false
     }
 });
 
-const RecipeModel = mongoose.model('Recipe', recipeSchema);
+const recipeModel = mongoose.model('Recipe', recipeSchema);
 
 module.exports = {
-    RecipeModel
+    recipeModel
 }
