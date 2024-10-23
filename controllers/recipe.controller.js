@@ -1,64 +1,65 @@
-var express = require('express');
-var router = express.Router();
 const { recipeModel } = require('../models/recipe.model');
 
 async function createRecipe(req, res) {
-    try{
-        const {nameRecipe, ingredients, steps} = req.body
-        const user = req.user
-        if (!nameRecipe){
-            return res.status(404).json({ message: 'La receta debe llevar un nombre' });
-        } else if (!ingredients)  {
-            return res.status(404).json({ message: 'Falta llenar el campo de ingredientes' });
-        } else if (!steps){
-            return res.status(404).json({message: 'No has establecido los pasos de tu receta'})
+    try {
+        const { nameRecipe, preptime, ingredients, steps, autor } = req.body;
+
+        if (!nameRecipe) {
+            return res.status(400).json({ message: 'La receta debe llevar un nombre' });
+        }
+        if (!ingredients || ingredients.length === 0) {
+            return res.status(400).json({ message: 'Falta llenar el campo de ingredientes' });
+        }
+        if (!steps || steps.length === 0) {
+            return res.status(400).json({ message: 'No has establecido los pasos de tu receta' });
         }
 
         const newReceta = new recipeModel({
             nameRecipe,
-            ingredients,
-            steps,
-            autor: user._id
-        })
+            preptime,
+            ingredients,  
+            steps, 
+            autor
+        });
 
         await newReceta.save();
-        res.status(200).json({ message: 'Receta creada exitosamente', receta: newReceta});
-    }catch (error){
-        res.status(500).json({ error: 'Error en el servidor.' });
+        res.status(201).json({ message: 'Receta creada exitosamente', receta: newReceta });
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.', details: error.message});
     }
-}
+};
 
-async function updateRecipe (req, res) {
+async function updateRecipe(req, res) {
     try {
-        const updateRecipe = await recipeModel.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
+        const updatedRecipe = await recipeModel.findByIdAndUpdate(
+            req.body.id,  
+            req.body,       
+            { new: true }   
         );
-        if (!updateRecipe) {
-            return res.status(404).json({ message: 'Receta no Encontrada' });
+        if (!updatedRecipe) {
+            return res.status(404).json({ message: 'Receta no encontrada' });
         }
-        res.status(200).json(updateRecipe);
+        res.status(200).json(updatedRecipe);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-async function deleteRecipe (req, res) {
+async function deleteRecipe(req, res) {
     try {
-        const deleterecipe = await recipeModel.findByIdAndDelete(req.body.id);
-        if (!deleterecipe) {
+        const deletedRecipe = await recipeModel.findByIdAndDelete(req.body.id);
+        if (!deletedRecipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
-        res.status(200).json({ message: 'Receta eliminada'});
+        res.status(200).json({ message: 'Receta eliminada exitosamente' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-async function getRecipe (req, res) {
+async function getRecipe(req, res) {
     try {
-        const recipe = await recipeModel.findById(req.params.id);
+        const recipe = await recipeModel.findById(req.body.id).populate('ingredients._idIngredient categoria autor');
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
@@ -68,9 +69,9 @@ async function getRecipe (req, res) {
     }
 };
 
-async function getAllRecipes(res) {
+async function getAllRecipes(req, res) {
     try {
-        const recipes = await recipeModel.find();
+        const recipes = await recipeModel.find().populate('ingredients._idIngredient categoria autor');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ message: error.message });

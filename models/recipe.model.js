@@ -26,7 +26,7 @@ const recipeSchema = new mongoose.Schema({
     },
     preptime: {
         type: String,
-        required: false
+        required: true
     },
     ingredients: {
         type: [IngredientsSchema],
@@ -37,12 +37,10 @@ const recipeSchema = new mongoose.Schema({
         required: true
     },
     image: {
-        type: String,
-        required: false
+        type: String
     },
     video: {
-        type: String,
-        required: false
+        type: String
     },
     categoria: {
         type: mongoose.Schema.Types.ObjectId,
@@ -54,15 +52,13 @@ const recipeSchema = new mongoose.Schema({
         required: true
     },
     Calificacion: {
-        type: Number,
-        required: false
+        type: Number
     },
     Fecha: {
-        type: Date,
-        required: false
+        type: Date
     }
 });
-//se agrega comentario prueba para subir cambios
+
 const recipeModel = mongoose.model('Recipe', recipeSchema);
 
 module.exports = {
