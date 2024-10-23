@@ -13,12 +13,19 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    bio: {
+    birthdate: {
+        type: Date,
+        required: true
+    },
+    gender: {
         type: String,
-
+        required: true
+    },
+    bio: {
+        type: String
     },
     profile_picture: {
-        type: String,
+        type: String
     },
     created_recipes: {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,6 +34,10 @@ const usersSchema = new mongoose.Schema({
     created_lists: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Lists"
+    },
+    is_deleted: {
+        type: Boolean,
+        default: false
     }
 });
 
