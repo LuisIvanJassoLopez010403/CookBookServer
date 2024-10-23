@@ -46,7 +46,7 @@ async function updateRecipe (req, res) {
 
 async function deleteRecipe (req, res) {
     try {
-        const deleterecipe = await recipeModel.findByIdAndDelete(req.params.id);
+        const deleterecipe = await recipeModel.findByIdAndDelete(req.body.id);
         if (!deleterecipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }

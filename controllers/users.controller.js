@@ -75,7 +75,7 @@ async function login(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { userId } = req.params;
+        const { userId } = req.body;
         const { email, username, birthdate, gender, bio, profile_picture } = req.body;
 
         const updatedUser = await usersModel.findByIdAndUpdate(
@@ -96,7 +96,7 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
     try {
-        const { userId } = req.params;
+        const { userId } = req.body;
 
         const deletedUser = await usersModel.findByIdAndUpdate(
             userId,
