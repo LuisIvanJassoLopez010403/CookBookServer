@@ -2,19 +2,21 @@ const mongoose = require('mongoose');
 
 const historySchema = new mongoose.Schema({
   idUsers: {
-    type: [mongoose.Types.ObjectId], 
-    ref: "Users" 
+    type: mongoose.Types.ObjectId, 
+    ref: "Users",
+    required: true
   },
-  idRecipe: {
-    type: [mongoose.Types.ObjectId], 
-    ref: "Recipes" 
-
-  },
-  date: {
-    type: Number
-
-  }
-
+  idRecipe: [{
+    recipeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recipe',
+      required: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 });
 
 const historyModel = mongoose.model('History', historySchema);
@@ -22,7 +24,3 @@ const historyModel = mongoose.model('History', historySchema);
 module.exports = {
   historyModel
 }
-
-
-
-//Utilizar el GET TIme, las fechas se manejan mejor con number (investigar)
