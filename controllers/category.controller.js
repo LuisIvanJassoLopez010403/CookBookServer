@@ -49,8 +49,34 @@ async function deleteCategory(req, res) {
     }
 }
 
+async function getCategory (req, res){
+    try{
+        const category = await categoryModel.findById(req.body.id);
+        if (!category){
+            return res.status(404).json({ message: 'Receta no encontrada' });
+        }
+        res.status(200).json(category);
+    } catch (error){
+        res.status(500).json({ message: error.message });
+    }
+};
+
+async function getAllCategories (req, res){
+    try{
+        const categories = await categoryModel.find();
+        if (!categories){
+            return res.status(404).json({ message: 'Recetas no encontradas' });
+        }
+        res.status(200).json(categories);
+    } catch (error){
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getCategory,
+    getAllCategories
 }

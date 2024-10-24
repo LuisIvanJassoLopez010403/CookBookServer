@@ -37,7 +37,9 @@ const {
 const {
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getCategory,
+    getAllCategories
 } = require('../controllers/category.controller');
 
 const {
@@ -72,6 +74,8 @@ router.post('/get-user-lists', authenticateToken, getListsByUser);
 router.post('/create-category', createCategory);
 router.post('/update-category', updateCategory);
 router.post('/delete-category', deleteCategory);
+router.get('/get-category', getCategory);
+router.get('/get-all-categories', getAllCategories);
 
 router.post('/search-recipe',authenticateToken,searchRecipes);
 

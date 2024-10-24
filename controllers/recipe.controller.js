@@ -58,7 +58,7 @@ async function deleteRecipe(req, res) {
         }
         res.status(200).json({ message: 'Receta eliminada exitosamente' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error del Servidor', details: error.message });
     }
 };
 
@@ -95,7 +95,7 @@ async function getRecipe(req, res) {
         
         res.status(200).json(recipe);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error del Servidor', details: error.message });
     }
 };
 
@@ -104,7 +104,7 @@ async function getAllRecipes(req, res) {
         const recipes = await recipeModel.find().populate('ingredients._idIngredient category autor');
         res.status(200).json(recipes);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error del servidor', details: error.message });
     }
 };
 
