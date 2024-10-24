@@ -58,19 +58,11 @@ async function getIngredientById(req, res) {
 async function updateIngredient(req, res) {
     try {
         const { id } = req.body;
-        const { nameIngredient, category } = req.body;
-
-        if (!nameIngredient || !category) {
-            return res.status(400).json({ error: 'Todos los campos son requeridos.' });
-        }
 
         const existingIngredient = await ingredientsModel.findById(id);
         if (!existingIngredient) {
             return res.status(404).json({ error: 'Ingrediente no encontrado.' });
         }
-
-        existingIngredient.nameIngredient = nameIngredient;
-        existingIngredient.category = category;
 
         await existingIngredient.save();
 
