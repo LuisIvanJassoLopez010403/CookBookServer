@@ -2,18 +2,22 @@ const { recipeModel } = require('../models/recipe.model');
 
 async function searchRecipes(req, res) {
     try {
-        const { ingredients, category } = req.body;
+        const { ingredients, category, nameRecipe } = req.body;
 
-        if (!ingredients || !Array.isArray(ingredients) || ingredients.length === 0) {
-            return res.status(400).json({ error: 'Debes proporcionar al menos un ingrediente.' });
+        if (!ingredients && !category && !nameRecipe) {
+            return res.status(400).json({ error: 'Debe enviar al menos un criterio de búsqueda.' });
         }
 
-        const query = {
-            'ingredients._idIngredient': { $in: ingredients.map(id => mongoose.Types.ObjectId(id)) }
-        };
+        if (ingredients) {
+            query = ['ingredients._idIngredient'] = { $in: ingredients.map(id => mongoose.Types.ObjectId(id)) };
+        }
 
         if (category) {
             query['categoria'] = category;
+        }
+
+        if (nameRecipe) {
+            query['nameRecipe'] = { $in: nameRecipe };
         }
 
         const recipes = await recipeModel.find(query).populate('ingredients._idIngredient categoria');
