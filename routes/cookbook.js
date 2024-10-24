@@ -36,6 +36,12 @@ const {
 } = require('../controllers/lists.controller');
 
 const {
+    createCategory,
+    updateCategory,
+    deleteCategory
+} = require('../controllers/category.controller');
+
+const {
     searchRecipes
 } = require('../controllers/search.controller');
 
@@ -57,13 +63,16 @@ router.get('/get-ingredient', getIngredientById);
 router.post('/update-ingredient', updateIngredient);
 router.post('/delete-ingredient', deleteIngredient);
 
-
 router.post('/create-list', createList);
 router.get('/get-all-lists', getAllLists);
 router.get('/get-list', getListById);
 router.post('/update-list', updateList);
 router.post('/delete-list', deleteList);
 router.post('/get-user-lists', getListsByUser);
+
+router.post('/create-category', createCategory);
+router.post('/update-category', updateCategory);
+router.post('/delete-category', deleteCategory);
 
 router.get('/get-user-lists',authenticateToken,getUserLists);
 router.post('/search-recipe',authenticateToken,searchRecipes);

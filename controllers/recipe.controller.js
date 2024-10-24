@@ -63,7 +63,7 @@ async function deleteRecipe(req, res) {
 
 async function getRecipe(req, res) {
     try {
-        const recipe = await recipeModel.findById(req.body.id).populate('ingredients._idIngredient categoria autor');
+        const recipe = await recipeModel.findById(req.body.id).populate('ingredients._idIngredient category autor');
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
@@ -75,7 +75,7 @@ async function getRecipe(req, res) {
 
 async function getAllRecipes(req, res) {
     try {
-        const recipes = await recipeModel.find().populate('ingredients._idIngredient categoria autor');
+        const recipes = await recipeModel.find().populate('ingredients._idIngredient category autor');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ message: error.message });

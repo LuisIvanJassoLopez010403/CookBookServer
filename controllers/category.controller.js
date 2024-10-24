@@ -4,18 +4,18 @@ const {
 
 async function createCategory(req, res) {
     try {
-        const categoria = req.body.categoria;
+        const category = req.body.category;
 
-        if (!categoria) {
+        if (!category) {
             return res.status(400).json({ message: 'La categoría debe llevar un nombre' });
         }
 
-        const newCategoria = new categoryModel({
-            categoria
+        const newCategory = new categoryModel({
+            category
         });
 
-        await newCategoria.save();
-        res.status(201).json({ message: 'Categoría creada exitosamente', categoria: newCategoria });
+        await newCategory.save();
+        res.status(201).json({ message: 'Categoría creada exitosamente', category: newCategory });
     } catch (error) {
         res.status(500).json({ error: 'Error en el servidor.', details: error.message});
     }

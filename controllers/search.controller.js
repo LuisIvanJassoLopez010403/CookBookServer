@@ -15,16 +15,15 @@ async function searchRecipes(req, res) {
         }
 
         if (category) {
-            query['categoria'] = category;
+            query['category'] = new mongoose.Types.ObjectId(category);
         }
 
         if (nameRecipe) {
-            query['nameRecipe'] = { $regex: nameRecipe,  $options: 'i' };
+            query['nameRecipe'] = { $regex: nameRecipe, $options: 'i'};
         }
 
-        const recipes = await recipeModel.find(query).populate('ingredients._idIngredient categoria');
+        const recipes = await recipeModel.find(query).populate('ingredients._idIngredient category');
 
-        // Retornar las recetas encontradas
         res.status(200).json({ recipes });
     } catch (error) {
         console.log(error);
