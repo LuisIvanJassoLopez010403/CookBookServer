@@ -17,7 +17,7 @@ async function searchRecipes(req, res) {
         }
 
         if (nameRecipe) {
-            query['nameRecipe'] = { $in: nameRecipe };
+            query['nameRecipe'] = { $regex: new RegExp(nameRecipe, 'i') };
         }
 
         const recipes = await recipeModel.find(query).populate('ingredients._idIngredient categoria');
