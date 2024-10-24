@@ -15,6 +15,11 @@ const listSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Recipe",
     required: true
+  },
+  autor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    required: true
   }
 });
 
