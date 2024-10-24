@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const {
-    categoryModel
-} = require('./categorys.model');
 
 const IngredientsSchema = new mongoose.Schema({
     _idIngredient:{
@@ -42,10 +39,10 @@ const recipeSchema = new mongoose.Schema({
     video: {
         type: String
     },
-    categoria: {
+    category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-        required: true
+        required: false
     },
     autor: {
         type: mongoose.Schema.Types.ObjectId,
