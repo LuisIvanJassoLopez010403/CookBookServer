@@ -2,7 +2,7 @@ const { listModel } = require('../models/lists.model');
 
 async function createList(req, res) {
     try {
-        const { nameList, image, description, recipes } = req.body;
+        const { nameList, image, description, recipes, autor } = req.body;
 
         if (!nameList) {
             return res.status(400).json({ message: 'El nombre de la lista es obligatorio' });
@@ -15,7 +15,8 @@ async function createList(req, res) {
             nameList,
             image,
             description,
-            recipes
+            recipes,
+            autor
         });
 
         await newList.save();
@@ -53,13 +54,6 @@ async function updateList(req, res) {
     try {
         const { id } = req.body;
         const { nameList, image, description, recipes } = req.body;
-
-        if (!nameList) {
-            return res.status(400).json({ message: 'El nombre de la lista es obligatorio' });
-        }
-        if (!recipes || recipes.length === 0) {
-            return res.status(400).json({ message: 'Debe incluir al menos una receta en la lista' });
-        }
 
         const updatedList = await listModel.findByIdAndUpdate(
             id, 
