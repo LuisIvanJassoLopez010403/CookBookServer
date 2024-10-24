@@ -6,8 +6,7 @@ const {
     signup,
     login,
     updateUser,
-    deleteUser,
-    getUserLists,
+    deleteUser
 } = require('../controllers/users.controller');
 
 const {
@@ -63,18 +62,17 @@ router.get('/get-ingredient', getIngredientById);
 router.post('/update-ingredient', updateIngredient);
 router.post('/delete-ingredient', deleteIngredient);
 
-router.post('/create-list', createList);
+router.post('/create-list', authenticateToken, createList);
 router.get('/get-all-lists', getAllLists);
-router.get('/get-list', getListById);
-router.post('/update-list', updateList);
-router.post('/delete-list', deleteList);
-router.post('/get-user-lists', getListsByUser);
+router.get('/get-list', authenticateToken, getListById);
+router.post('/update-list', authenticateToken, updateList);
+router.post('/delete-list', authenticateToken, deleteList);
+router.post('/get-user-lists', authenticateToken, getListsByUser);
 
 router.post('/create-category', createCategory);
 router.post('/update-category', updateCategory);
 router.post('/delete-category', deleteCategory);
 
-router.get('/get-user-lists',authenticateToken,getUserLists);
 router.post('/search-recipe',authenticateToken,searchRecipes);
 
 module.exports = router;

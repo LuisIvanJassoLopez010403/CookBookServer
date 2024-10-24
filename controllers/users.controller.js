@@ -114,29 +114,10 @@ async function deleteUser(req, res) {
     }
 }
 
-async function getUserLists(req, res) {
-    try {
-        const userId = req.user.userId;
-
-        const user = await usersModel.findById(userId).populate('created_lists');
-
-        if (!user || user.is_deleted) {
-            return res.status(404).json({ error: 'Usuario no encontrado.' });
-        }
-
-        res.status(200).json({ lists: user.created_lists });
-    } catch (error) {
-
-        console.error(error); 
-        res.status(500).json({ error: 'Error en el servidor.' });
-    }
-}
-
 module.exports = { 
     signup,
     login,
     updateUser,
-    deleteUser,
-    getUserLists
+    deleteUser
 };
 
