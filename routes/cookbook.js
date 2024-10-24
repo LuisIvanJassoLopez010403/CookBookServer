@@ -44,6 +44,10 @@ const {
     searchRecipes
 } = require('../controllers/search.controller');
 
+const {
+    viewHistory
+} = require('../controllers/history.controler');
+
 
 router.post('/signup',signup);
 router.post('/login',login);
@@ -74,5 +78,7 @@ router.post('/update-category', updateCategory);
 router.post('/delete-category', deleteCategory);
 
 router.post('/search-recipe',authenticateToken,searchRecipes);
+
+router.post('/view-history',authenticateToken,viewHistory);
 
 module.exports = router;
