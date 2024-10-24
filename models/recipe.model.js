@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {
-    CategoriaModel
-} = require('./categorias.model');
+    categoryModel
+} = require('./categorys.model');
 
 const IngredientsSchema = new mongoose.Schema({
     _idIngredient:{
@@ -44,7 +44,7 @@ const recipeSchema = new mongoose.Schema({
     },
     categoria: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categoria',
+        ref: 'Category',
         required: true
     },
     autor: {

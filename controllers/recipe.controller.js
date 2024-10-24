@@ -2,7 +2,7 @@ const { recipeModel } = require('../models/recipe.model');
 
 async function createRecipe(req, res) {
     try {
-        const { nameRecipe, preptime, ingredients, steps, autor } = req.body;
+        const { nameRecipe, preptime, ingredients, steps, autor, category } = req.body;
 
         if (!nameRecipe) {
             return res.status(400).json({ message: 'La receta debe llevar un nombre' });
@@ -13,13 +13,17 @@ async function createRecipe(req, res) {
         if (!steps || steps.length === 0) {
             return res.status(400).json({ message: 'No has establecido los pasos de tu receta' });
         }
+        if (!category) {
+            return res.status(400).json({ message: 'No se ha agregado la categoria' });
+        }
 
         const newReceta = new recipeModel({
             nameRecipe,
             preptime,
             ingredients,  
             steps, 
-            autor
+            autor,
+            category
         });
 
         await newReceta.save();
