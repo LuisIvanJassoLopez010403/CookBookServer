@@ -53,8 +53,8 @@ const {
 
 router.post('/signup',signup);
 router.post('/login',login);
-router.post('/update-user',updateUser);
-router.post('/delete-user',deleteUser);
+router.post('/update-user',authenticateToken,updateUser);
+router.post('/delete-user',authenticateToken,deleteUser);
 
 router.post('/create-recipe',authenticateToken,createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
