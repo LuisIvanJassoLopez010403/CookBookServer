@@ -1,4 +1,5 @@
 const { recipeModel } = require('../models/recipe.model');
+const { historyModel } = require('../models/history.model');
 
 async function createRecipe(req, res) {
     try {
@@ -62,11 +63,36 @@ async function deleteRecipe(req, res) {
 };
 
 async function getRecipe(req, res) {
+    const userid = req.user.id;
+
     try {
         const recipe = await recipeModel.findById(req.body.id).populate('ingredients._idIngredient category autor');
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
+
+        let currentHistory = await historyModel.findOne({ userId });
+        if (!currentHistory) {
+            currentHistory = new historyModel({
+                userid,
+                recetaId,
+                fechaVista: Date.now()
+            });
+            await currentHistory.save();
+        } else {
+            const recipehistory = await historyModel.findOne({recetaId });
+            if (!recipehistory) {
+                const newhistory = new historyModel({
+                    userId,
+                    recetaId
+                });
+                await newhistory.save();
+            } else {
+                recipehistory.date = Date.now();
+                await recipehistory.save();
+            }
+        }
+        
         res.status(200).json(recipe);
     } catch (error) {
         res.status(500).json({ message: error.message });
