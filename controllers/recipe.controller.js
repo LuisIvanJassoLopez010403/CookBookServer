@@ -24,8 +24,8 @@ async function createRecipe(req, res) {
             preptime,
             ingredients,  
             steps, 
-            autor: new mongoose.Types.ObjectId(autor),  // Convertir a ObjectId
-            category: new mongoose.Types.ObjectId(category) // Convertir a ObjectId
+            autor: new mongoose.Types.ObjectId(autor),  
+            category: new mongoose.Types.ObjectId(category) 
         });
 
         await newReceta.save();
@@ -79,8 +79,8 @@ async function deleteRecipe(req, res) {
 };
 
 async function getRecipe(req, res) {
-    const userId = req.body.userId;  // ID enviado en el cuerpo de la solicitud
-    const recipeId = req.body.id;  // ID de la receta que se está consultando
+    const userId = req.body.userId;  
+    const recipeId = req.body.id;  
 
     try {
         const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category autor');
@@ -90,27 +90,27 @@ async function getRecipe(req, res) {
 
         let currentHistory = await historyModel.findOne({ idUsers: userId });
         if (!currentHistory) {
-            // Si el historial para el usuario no existe, crea un nuevo historial
+            
             currentHistory = new historyModel({
-                idUsers: userId,  // Asegúrate de guardar el ID del usuario correctamente
+                idUsers: userId,  
                 idRecipe: [{
-                    recipeId: recipeId,  // Guarda el ID de la receta consultada
+                    recipeId: recipeId,  
                     date: Date.now()
                 }]
             });
             await currentHistory.save();
         } else {
-            // Si ya existe un historial para el usuario, verifica si la receta ya está en el historial
+           
             const recipeInHistory = currentHistory.idRecipe.find(item => item.recipeId.toString() === recipeId);
             if (!recipeInHistory) {
-                // Si la receta no está en el historial, agrégala
+                
                 currentHistory.idRecipe.push({
                     recipeId: recipeId,
                     date: Date.now()
                 });
                 await currentHistory.save();
             } else {
-                // Si ya está, actualiza la fecha de visualización
+                
                 recipeInHistory.date = Date.now();
                 await currentHistory.save();
             }
