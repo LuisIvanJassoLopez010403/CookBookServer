@@ -77,7 +77,6 @@ async function updateList(req, res) {
     }
 }
 
-// Eliminar una lista
 async function deleteList(req, res) {
     try {
         const { id } = req.body;
@@ -94,10 +93,27 @@ async function deleteList(req, res) {
     }
 }
 
+async function getListsByUser(req, res) {
+    try {
+        const { userId } = req.body;
+
+        const lists = await listModel.find({ autor: userId }).populate('recipes');
+
+        if (lists.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron listados para este usuario' });
+        }
+
+        res.status(200).json(lists);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los listados', error: error.message });
+    }
+}
+
 module.exports = {
     createList,
     getAllLists,
     getListById,
     updateList,
-    deleteList
+    deleteList,
+    getListsByUser
 };
