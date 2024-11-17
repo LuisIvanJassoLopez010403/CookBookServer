@@ -81,7 +81,7 @@ router.post('/delete-category', deleteCategory);
 router.get('/get-category', getCategory);
 router.get('/get-all-categories', getAllCategories);
 
-router.post('/search-recipe',authenticateToken,searchRecipes);
+router.post('/search-recipe',searchRecipes);
 
 router.post('/view-history',authenticateToken,viewHistory);
 
