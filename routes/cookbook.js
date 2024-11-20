@@ -59,7 +59,7 @@ router.post('/delete-user',authenticateToken,deleteUser);
 router.post('/create-recipe',authenticateToken,createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
 router.get('/get-recipe', authenticateToken, getRecipe);
-router.post('/update-recipe', authenticateToken, updateRecipe);
+router.post('/update-recipe', updateRecipe);
 router.post('/delete-recipe', authenticateToken, deleteRecipe);
 
 router.post('/create-ingredient', createIngredient);
