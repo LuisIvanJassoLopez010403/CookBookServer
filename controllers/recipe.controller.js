@@ -4,28 +4,48 @@ const mongoose = require('mongoose');
 
 async function createRecipe(req, res) {
     try {
-        const { nameRecipe, preptime, ingredients, steps, autor, category } = req.body;
+        const { nameRecipe, description, preptime, ingredients, steps, date, category, author, image, video } = req.body;
 
         if (!nameRecipe) {
             return res.status(400).json({ message: 'La receta debe llevar un nombre' });
         }
+        if (!description) {
+            return res.status(400).json({ message: 'La receta debe de llevar una descripcion' });
+        }
+        if (!preptime) {
+            return res.status(400).json({ message: 'La receta debe de llevar tiempo de preparacion' });
+        }
         if (!ingredients || ingredients.length === 0) {
             return res.status(400).json({ message: 'Falta llenar el campo de ingredientes' });
         }
-        if (!steps || steps.length === 0) {
+        if (!steps) {
             return res.status(400).json({ message: 'No has establecido los pasos de tu receta' });
+        }
+        if (!preptime) {
+            return res.status(400).json({ message: 'La receta debe de llevar tiempo de preparacion' });
         }
         if (!category) {
             return res.status(400).json({ message: 'No se ha agregado la categoria' });
         }
+        if (!date) {
+            return res.status(400).json({ message: 'La receta de de llevar fecha' });
+        }
+        if (!author) {
+            return res.status(400).json({ message: 'La receta de de llevar fecha' });
+        }
+        
 
         const newReceta = new recipeModel({
             nameRecipe,
+            description,
             preptime,
             ingredients,  
-            steps, 
-            autor: new mongoose.Types.ObjectId(autor),  
-            category: new mongoose.Types.ObjectId(category) 
+            steps,
+            date,
+            category: new mongoose.Types.ObjectId(category),
+            author: new mongoose.Types.ObjectId(author),
+            image,
+            video 
         });
 
         await newReceta.save();
@@ -83,7 +103,7 @@ async function getRecipe(req, res) {
     const recipeId = req.body.id;  
 
     try {
-        const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category autor');
+        const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category author');
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
@@ -126,7 +146,7 @@ async function getRecipe(req, res) {
 
 async function getAllRecipes(req, res) {
     try {
-        const recipes = await recipeModel.find().populate('ingredients._idIngredient category autor');
+        const recipes = await recipeModel.find().populate('ingredients._idIngredient category author');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ message: 'Error del servidor', details: error.message });

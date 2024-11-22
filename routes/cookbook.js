@@ -48,7 +48,7 @@ const {
 
 const {
     viewHistory
-} = require('../controllers/history.controler');
+} = require('../controllers/history.controller');
 
 
 router.post('/signup',signup);

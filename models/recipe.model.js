@@ -21,8 +21,12 @@ const recipeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    preptime: {
+    description: {
         type: String,
+        required: true
+    },
+    preptime: {
+        type: Number,
         required: true
     },
     ingredients: {
@@ -30,7 +34,21 @@ const recipeSchema = new mongoose.Schema({
         required: true
     },
     steps: {
-        type: [String],
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Users',
         required: true
     },
     image: {
@@ -39,21 +57,8 @@ const recipeSchema = new mongoose.Schema({
     video: {
         type: String
     },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: false
-    },
-    autor: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'Users',
-        required: true
-    },
-    Calificacion: {
+    grade: {
         type: Number
-    },
-    Fecha: {
-        type: Date
     }
 });
 
