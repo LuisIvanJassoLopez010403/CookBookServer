@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 async function createRecipe(req, res) {
     try {
-        const { nameRecipe, description, preptime, ingredients, steps, createdDate, category, author, image, video } = req.body;
+        const { nameRecipe, description, preptime, ingredients, steps, createdDate, category, autor, image, video } = req.body;
 
         if (!nameRecipe) {
             return res.status(400).json({ message: 'La receta debe llevar un nombre' });
@@ -28,10 +28,10 @@ async function createRecipe(req, res) {
             return res.status(400).json({ message: 'No se ha agregado la categoria' });
         }
         if (!createdDate) {
-            return res.status(400).json({ message: 'La receta de de llevar fecha' });
+            return res.status(400).json({ message: 'La receta debe de llevar fecha' });
         }
-        if (!author) {
-            return res.status(400).json({ message: 'La receta de de llevar fecha' });
+        if (!autor) {
+            return res.status(400).json({ message: 'La receta debe de llevar autor' });
         }
         
 
@@ -43,7 +43,7 @@ async function createRecipe(req, res) {
             steps,
             createdDate,
             category: new mongoose.Types.ObjectId(category),
-            author: new mongoose.Types.ObjectId(author),
+            autor: new mongoose.Types.ObjectId(autor),
             image,
             video 
         });
@@ -103,7 +103,7 @@ async function getRecipe(req, res) {
     const recipeId = req.body.id;  
 
     try {
-        const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category author');
+        const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category autor');
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
@@ -146,7 +146,7 @@ async function getRecipe(req, res) {
 
 async function getAllRecipes(req, res) {
     try {
-        const recipes = await recipeModel.find().populate('ingredients._idIngredient category author');
+        const recipes = await recipeModel.find().populate('ingredients._idIngredient category autor');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ message: 'Error del servidor', details: error.message });
