@@ -45,5 +45,5 @@ async function viewHistory(req, res) {
 module.exports = {
     getHistory,
     viewHistory
-  }
+}
   
