@@ -37,7 +37,7 @@ const recipeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: {
+    createdDate: {
         type: Date,
         required: true
     },

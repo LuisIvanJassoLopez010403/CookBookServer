@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 async function createRecipe(req, res) {
     try {
-        const { nameRecipe, description, preptime, ingredients, steps, date, category, author, image, video } = req.body;
+        const { nameRecipe, description, preptime, ingredients, steps, createdDate, category, author, image, video } = req.body;
 
         if (!nameRecipe) {
             return res.status(400).json({ message: 'La receta debe llevar un nombre' });
@@ -27,7 +27,7 @@ async function createRecipe(req, res) {
         if (!category) {
             return res.status(400).json({ message: 'No se ha agregado la categoria' });
         }
-        if (!date) {
+        if (!createdDate) {
             return res.status(400).json({ message: 'La receta de de llevar fecha' });
         }
         if (!author) {
@@ -41,7 +41,7 @@ async function createRecipe(req, res) {
             preptime,
             ingredients,  
             steps,
-            date,
+            createdDate,
             category: new mongoose.Types.ObjectId(category),
             author: new mongoose.Types.ObjectId(author),
             image,
