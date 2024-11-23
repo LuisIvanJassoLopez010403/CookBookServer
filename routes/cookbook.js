@@ -6,7 +6,8 @@ const {
     signup,
     login,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserDetails
 } = require('../controllers/users.controller');
 
 const {
@@ -55,6 +56,7 @@ router.post('/signup',signup);
 router.post('/login',login);
 router.post('/update-user',authenticateToken,updateUser);
 router.post('/delete-user',authenticateToken,deleteUser);
+router.post('/get-user-details',getUserDetails)
 
 router.post('/create-recipe',authenticateToken,createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
