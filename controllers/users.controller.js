@@ -114,10 +114,51 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getUserDetails(req, res) {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Nombre de usuario y contraseña son requeridos.' });
+        }
+
+        const user = await usersModel.findOne({ username });
+
+        if (!user || user.is_deleted) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        const userData = {
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            birthdate: user.birthdate,
+            gender: user.gender,
+            bio: user.bio,
+            profile_picture: user.profile_picture,
+            created_recipes: user.created_recipes,
+            created_lists: user.created_lists
+        };
+
+        res.status(200).json({ message: 'Detalles del usuario obtenidos exitosamente.', user: userData });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
 module.exports = { 
     signup,
     login,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserDetails
 };
 
