@@ -7,7 +7,8 @@ const {
     login,
     updateUser,
     deleteUser,
-    getUserDetails
+    getUserDetails,
+    getUserById
 } = require('../controllers/users.controller');
 
 const {
@@ -23,7 +24,8 @@ const {
     updateRecipe,
     deleteRecipe,
     getRecipe,
-    getAllRecipes
+    getAllRecipes,
+    getRecipesByUser
 } = require('../controllers/recipe.controller');
 
 const {
@@ -56,13 +58,16 @@ router.post('/signup',signup);
 router.post('/login',login);
 router.post('/update-user',authenticateToken,updateUser);
 router.post('/delete-user',authenticateToken,deleteUser);
-router.post('/get-user-details',getUserDetails)
+router.get('/get-user-details',getUserDetails)
+router.get('/get-user',getUserById)
+
 
 router.post('/create-recipe',authenticateToken,createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
 router.get('/get-recipe', authenticateToken, getRecipe);
 router.post('/update-recipe', updateRecipe);
 router.post('/delete-recipe', authenticateToken, deleteRecipe);
+router.get('/get-user-recipes', getRecipesByUser)
 
 router.post('/create-ingredient', createIngredient);
 router.get('/get-all-ingredients', getAllIngredients);
