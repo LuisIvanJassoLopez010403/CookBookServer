@@ -76,7 +76,7 @@ async function login(req, res) {
 async function updateUser(req, res) {
     try {
         const { userId } = req.body;
-        const { email, username, birthdate, gender, bio, profile_picture } = req.body;
+        const { username, gender, bio, profile_picture } = req.body;
 
         const updatedUser = await usersModel.findByIdAndUpdate(
             userId,
@@ -154,11 +154,27 @@ async function getUserDetails(req, res) {
     }
 }
 
+async function getUserById(req, res) {
+    try {
+        const { userId } = req.body;
+
+        const user = await usersModel.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
 module.exports = { 
     signup,
     login,
     updateUser,
     deleteUser,
-    getUserDetails
+    getUserDetails,
+    getUserById
 };
 
