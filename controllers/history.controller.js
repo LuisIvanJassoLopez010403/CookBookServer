@@ -30,37 +30,26 @@ async function viewHistory(req, res) {
     const iduser = req.body.id;
 
     try {
-        const history = await historyModel.aggregate([
-            { $match: { userId: iduser } },
-            { $unwind: "$recipeHistory" },
-            { 
-                $lookup: { 
-                    from: "recipes", 
-                    localField: "recipeHistory.recipeId",
-                    foreignField: "_id",
-                    as: "recipeHistory.recipeId"
-                }
-            },
-            { $sort: { "recipeHistory.date": -1 } },
-            { $group: { 
-                _id: "$_id",
-                userId: { $first: "$userId" },
-                recipeHistory: { $push: "$recipeHistory" },
-                __v: { $first: "$__v" }
-            }}
-        ]);
-        
+        const history = await historyModel.find({ userId: iduser })
+            .populate('recipeHistory.recipeId')
+            .lean();
 
         if (!history || history.length === 0) {
             console.log('User ID:', iduser);
             return res.status(404).json({ message: 'No se encontró historial para este usuario.' });
         }
 
-        res.status(200).json(history);
+        const sortedHistory = history.map(userHistory => ({
+            ...userHistory,
+            recipeHistory: userHistory.recipeHistory.sort((a, b) => new Date(b.date) - new Date(a.date))
+        }));
+
+        res.status(200).json(sortedHistory);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener el historial', error: error.message });
     }
 }
+
 
 
 module.exports = {
