@@ -36,6 +36,39 @@ const getAllIngredients = async (req, res) => {
     }
 };
 
+// Obtener todos los ingredientes agrupados por categoria
+const getAllIngredientsGroupedByCategory = async (req, res) => {
+    try {
+        const ingredients = await ingredientsModel.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    ingredients: { 
+                        $push: {
+                            _id: '$_id',
+                            nameIngredient: '$nameIngredient'
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$_id',
+                    ingredients: 1
+                }
+            },
+            {
+                $sort: { category: 1 }
+            }
+        ]);
+
+        res.status(200).json(ingredients);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 // Obtener un ingrediente por ID
 async function getIngredientById(req, res) {
     try {
@@ -92,6 +125,7 @@ async function deleteIngredient(req, res) {
 
 module.exports = {
     getAllIngredients,
+    getAllIngredientsGroupedByCategory,
     getIngredientById,
     createIngredient,
     updateIngredient,
