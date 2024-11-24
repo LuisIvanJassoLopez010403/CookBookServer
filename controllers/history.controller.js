@@ -25,11 +25,22 @@ async function getHistory(req, res) {
         res.status(500).json({ message: 'Error al agregar la receta', error: error.message });
     }
 };
+
 async function viewHistory(req, res) {
-    const iduser = req.body.id; 
+    const iduser = req.body.id;
 
     try {
-        const history = await historyModel.find({ userId: iduser }).populate('recipeHistory.recipeId');
+        const history = await historyModel.aggregate([
+            { $match: { userId: iduser } },
+            { $unwind: "$recipeHistory" },
+            { $sort: { "recipeHistory.date": -1 } }, 
+            { $group: { 
+                _id: "$_id",
+                userId: { $first: "$userId" },
+                recipeHistory: { $push: "$recipeHistory" },
+                __v: { $first: "$__v" }
+            }}
+        ]);
 
         if (!history || history.length === 0) {
             console.log('User ID:', iduser);
@@ -41,6 +52,7 @@ async function viewHistory(req, res) {
         res.status(500).json({ message: 'Error al obtener el historial', error: error.message });
     }
 }
+
 
 module.exports = {
     getHistory,
