@@ -46,7 +46,8 @@ const {
 } = require('../controllers/category.controller');
 
 const {
-    searchRecipes
+    searchRecipes,
+    searchSpecifiedRecipes
 } = require('../controllers/search.controller');
 
 const {
@@ -88,7 +89,8 @@ router.post('/delete-category', deleteCategory);
 router.get('/get-category', getCategory);
 router.get('/get-all-categories', getAllCategories);
 
-router.post('/search-recipe',searchRecipes);
+router.post('/search-recipe',searchRecipes)
+router.post('/search-specified-recipe',searchSpecifiedRecipes);
 
 router.post('/view-history',authenticateToken,viewHistory);
 
