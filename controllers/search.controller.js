@@ -11,7 +11,7 @@ async function searchSpecifiedRecipes(req, res) {
         }
 
         if (ingredients && ingredients.length > 0) {
-            query['ingredients._idIngredient'] = { $sall: ingredients.map(id => new mongoose.Types.ObjectId(id)) };
+            query['ingredients._idIngredient'] = { $all: ingredients.map(id => new mongoose.Types.ObjectId(id)) };
         }
 
         if (category) {
