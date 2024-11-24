@@ -149,6 +149,46 @@ async function getAllRecipes(req, res) {
     }
 };
 
+const getAllRecipesByCategory = async (req, res) => {
+    try{
+        const ingredients = await recipeModel.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    recipes: {
+                        $push: {
+                            _id: '$_id',
+                            nameRecipe: '$nameRecipe',
+                            description: '$description',
+                            preptime: '$preptime',
+                            ingredients: '$ingredients',
+                            steps: '$steps',
+                            createdDate: '$createdDate',
+                            category: '$category',
+                            autor: '$autor',
+                            image: '$image',
+                            video: '$video'
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$_id',
+                    recipes: 1
+                }
+            },
+            {
+                $sort: { category: 1 }
+            }
+        ])
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error del servidor', details: error.message });
+    }
+};
+
 async function getRecipesByUser(req, res) {
     try {
         const { userId } = req.body;
@@ -170,5 +210,6 @@ module.exports = {
     deleteRecipe,
     getRecipe,
     getAllRecipes,
+    getAllRecipesByCategory,
     getRecipesByUser
 };
