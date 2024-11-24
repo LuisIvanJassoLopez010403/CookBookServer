@@ -183,6 +183,8 @@ const getAllRecipesByCategory = async (req, res) => {
                 $sort: { category: 1 }
             }
         ])
+
+        res.status(200).json(ingredients);
     }
     catch (error) {
         res.status(500).json({ message: 'Error del servidor', details: error.message });
