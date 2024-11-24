@@ -5,15 +5,15 @@ async function getHistory(req, res) {
     const iduser = req.user.id;
 
     try {
-        let userHistory = await historyModel.findOne({ idUsers: iduser });
+        let userHistory = await historyModel.findOne({ userId: iduser });
         
         if (!userHistory) {
             userHistory = new historyModel({
-                idUsers: iduser,
-                idRecipe: [{ recipeId: idrecipe }]  
+                userId: iduser,
+                recipeHistory: [{ recipeId: idrecipe }]  
             });
         } else {
-            userHistory.idRecipe.push({
+            userHistory.recipeHistory.push({
                 recipeId: idrecipe,
                 date: Date.now()
             });
@@ -29,7 +29,7 @@ async function viewHistory(req, res) {
     const iduser = req.body.id; 
 
     try {
-        const history = await historyModel.find({ idUsers: iduser }).populate('idRecipe.recipeId');
+        const history = await historyModel.find({ userId: iduser }).populate('recipeHistory.recipeId');
 
         if (!history || history.length === 0) {
             console.log('User ID:', iduser);
