@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const historySchema = new mongoose.Schema({
-  idUsers: {
+  userId: {
     type: mongoose.Types.ObjectId, 
     ref: "Users",
     required: true
   },
-  idRecipe: [{
+  recipeHistory: [{
     recipeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recipe',

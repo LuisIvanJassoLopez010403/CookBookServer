@@ -108,12 +108,12 @@ async function getRecipe(req, res) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
 
-        let currentHistory = await historyModel.findOne({ idUsers: userId });
+        let currentHistory = await historyModel.findOne({ userId: userId });
         if (!currentHistory) {
             
             currentHistory = new historyModel({
-                idUsers: userId,  
-                idRecipe: [{
+                userId: userId,  
+                recipeHistory: [{
                     recipeId: recipeId,  
                     date: Date.now()
                 }]
@@ -121,28 +121,24 @@ async function getRecipe(req, res) {
             await currentHistory.save();
         } else {
            
-            const recipeInHistory = currentHistory.idRecipe.find(item => item.recipeId.toString() === recipeId);
+            const recipeInHistory = currentHistory.recipeHistory.find(item => item.recipeId.toString() === recipeId);
             if (!recipeInHistory) {
                 
-                currentHistory.idRecipe.push({
+                currentHistory.recipeHistory.push({
                     recipeId: recipeId,
                     date: Date.now()
                 });
                 await currentHistory.save();
             } else {
-                
                 recipeInHistory.date = Date.now();
                 await currentHistory.save();
             }
         }
-        
         res.status(200).json(recipe);
     } catch (error) {
         res.status(500).json({ message: 'Error del Servidor', details: error.message });
     }
 };
-
-
 
 async function getAllRecipes(req, res) {
     try {
