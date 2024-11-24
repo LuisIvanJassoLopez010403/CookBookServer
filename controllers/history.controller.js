@@ -33,7 +33,15 @@ async function viewHistory(req, res) {
         const history = await historyModel.aggregate([
             { $match: { userId: iduser } },
             { $unwind: "$recipeHistory" },
-            { $sort: { "recipeHistory.date": -1 } }, 
+            { 
+                $lookup: { 
+                    from: "recipes", 
+                    localField: "recipeHistory.recipeId",
+                    foreignField: "_id",
+                    as: "recipeHistory.recipeId"
+                }
+            },
+            { $sort: { "recipeHistory.date": -1 } },
             { $group: { 
                 _id: "$_id",
                 userId: { $first: "$userId" },
@@ -41,6 +49,7 @@ async function viewHistory(req, res) {
                 __v: { $first: "$__v" }
             }}
         ]);
+        
 
         if (!history || history.length === 0) {
             console.log('User ID:', iduser);
