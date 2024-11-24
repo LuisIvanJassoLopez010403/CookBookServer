@@ -153,7 +153,7 @@ async function getRecipesByUser(req, res) {
     try {
         const { userId } = req.body;
 
-        const recipes = await recipeModel.find({ autor: userId }).populate('ingredients._idIngredient');
+        const recipes = await recipeModel.find({ autor: userId });
         if (!recipes || recipes.length === 0) {
             return res.status(404).json({ error: 'No se encontraron recetas para este usuario.' });
         }
