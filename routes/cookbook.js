@@ -14,6 +14,7 @@ const {
 const {
     createIngredient,
     getAllIngredients,
+    getAllIngredientsGroupedByCategory,
     getIngredientById,
     updateIngredient,
     deleteIngredient
@@ -72,6 +73,7 @@ router.get('/get-user-recipes', getRecipesByUser)
 
 router.post('/create-ingredient', createIngredient);
 router.get('/get-all-ingredients', getAllIngredients);
+router.get('/get-all-ingredients-by-category', getAllIngredientsGroupedByCategory);
 router.get('/get-ingredient', getIngredientById);
 router.post('/update-ingredient', updateIngredient);
 router.post('/delete-ingredient', deleteIngredient);
