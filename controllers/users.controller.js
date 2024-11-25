@@ -75,24 +75,36 @@ async function login(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { userId } = req.body;
-        const { username, gender, bio, profile_picture } = req.body;
+        const { userId, email, username, birthdate, gender, bio, profile_picture } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'El ID del usuario es obligatorio.' });
+        }
+
+        const updates = { email, username, birthdate, gender, bio, profile_picture };
+
+        const validUpdates = Object.fromEntries(
+            Object.entries(updates).filter(([_, value]) => value !== undefined)
+        );
 
         const updatedUser = await usersModel.findByIdAndUpdate(
             userId,
-            { email, username, birthdate, gender, bio, profile_picture },
+            validUpdates,
             { new: true, runValidators: true }
         );
 
         if (!updatedUser) {
             return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
+
         res.status(200).json({ message: 'Usuario actualizado exitosamente.', user: updatedUser });
 
     } catch (error) {
+        console.error('Error al actualizar el usuario:', error);
         res.status(500).json({ error: 'Error en el servidor.' });
     }
 }
+
 
 async function deleteUser(req, res) {
     try {
