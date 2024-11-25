@@ -173,17 +173,9 @@ const getAllRecipesByCategory = async (req, res) => {
                 }
             },
             {
-                $lookup: {
-                    from: 'categories',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'categoryDetails'
-                }
-            },
-            {
                 $project: {
                     _id: 0,
-                    category: { $arrayElemAt: ['$categoryDetails.category', 0] },
+                    category: '$_id',
                     recipes: 1
                 }
             },
