@@ -62,7 +62,7 @@ router.post('/login',login);
 router.post('/update-user',authenticateToken,updateUser);
 router.post('/delete-user',authenticateToken,deleteUser);
 router.get('/get-user-details',getUserDetails)
-router.get('/get-user',getUserById)
+router.post('/get-user',authenticateToken,getUserById)
 
 router.post('/create-recipe',authenticateToken,createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
