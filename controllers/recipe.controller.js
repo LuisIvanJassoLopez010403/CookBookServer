@@ -186,7 +186,7 @@ const getAllRecipesByCategory = async (req, res) => {
             {
                 $project: {
                     _id: 0,
-                    category: '$category',
+                    category: '$_id',
                     recipes: 1
                 }
             },
