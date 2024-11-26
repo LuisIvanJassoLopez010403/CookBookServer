@@ -153,8 +153,19 @@ const getAllRecipesByCategory = async (req, res) => {
     try{
         const ingredients = await recipeModel.aggregate([
             {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'category',
+                    foreignField: '_id',
+                    as: 'categoryDetails'
+                }
+            },
+            {
+                $unwind: '$categoryDetails' // Asegura que cada receta tenga un objeto de categoría
+            },
+            {
                 $group: {
-                    _id: '$category',
+                    _id: '$categoryDetails.category',
                     recipes: {
                         $push: {
                             _id: '$_id',
@@ -175,7 +186,7 @@ const getAllRecipesByCategory = async (req, res) => {
             {
                 $project: {
                     _id: 0,
-                    category: '$_id',
+                    category: '$category',
                     recipes: 1
                 }
             },
