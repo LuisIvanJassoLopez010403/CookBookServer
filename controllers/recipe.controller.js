@@ -103,14 +103,20 @@ async function getRecipe(req, res) {
     const recipeId = req.body.id;  
 
     try {
-        const recipe = await recipeModel.findById(recipeId).populate('ingredients._idIngredient category autor');
+        const recipe = await recipeModel
+            .findById(recipeId)
+            .populate([
+                { path: 'ingredients._idIngredient' }, 
+                { path: 'category' }, 
+                { path: 'autor', select: 'username' } 
+            ]);
+
         if (!recipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
         }
 
         let currentHistory = await historyModel.findOne({ userId: userId });
         if (!currentHistory) {
-            
             currentHistory = new historyModel({
                 userId: userId,  
                 recipeHistory: [{
@@ -120,10 +126,8 @@ async function getRecipe(req, res) {
             });
             await currentHistory.save();
         } else {
-           
             const recipeInHistory = currentHistory.recipeHistory.find(item => item.recipeId.toString() === recipeId);
             if (!recipeInHistory) {
-                
                 currentHistory.recipeHistory.push({
                     recipeId: recipeId,
                     date: Date.now()
