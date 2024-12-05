@@ -8,7 +8,10 @@ const ingredientsSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true
-    }
+    },
+    icon: {
+        type: String
+    },
 });
 
 const ingredientsModel = mongoose.model('Ingredients', ingredientsSchema);
