@@ -46,7 +46,8 @@ const getAllIngredientsGroupedByCategory = async (req, res) => {
                     ingredients: { 
                         $push: {
                             _id: '$_id',
-                            nameIngredient: '$nameIngredient'
+                            nameIngredient: '$nameIngredient',
+                            icon: '$icon'
                         }
                     }
                 }
