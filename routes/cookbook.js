@@ -65,7 +65,7 @@ router.post('/delete-user',authenticateToken,deleteUser);
 router.get('/get-user-details',getUserDetails)
 router.post('/get-user',authenticateToken,getUserById)
 
-router.post('/create-recipe',authenticateToken,createRecipe);
+router.post('/create-recipe',authenticateToken, authorizeRoles('admin'), createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
 router.get('/get-all-recipes-by-category', getAllRecipesByCategory);
 router.post('/get-recipe', authenticateToken, getRecipe);
