@@ -123,6 +123,35 @@ async function addRecipeToList(req, res) {
     }
 }
 
+async function removeRecipeFromList(req, res) {
+    try {
+        const { listId, recipeId } = req.params;
+
+        const list = await listModel.findById(listId);
+
+        if (!list) {
+            return res.status(404).json({ message: "Lista no encontrada" });
+        }
+
+        const recipeIndex = list.recipes.indexOf(recipeId);
+        if (recipeIndex === -1) {
+            return res.status(404).json({ message: "Receta no encontrada en la lista" });
+        }
+
+        list.recipes.splice(recipeIndex, 1); 
+        await list.save();
+
+        return res.status(200).json({
+            message: "Receta eliminada de la lista exitosamente",
+            list: list
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error al eliminar la receta de la lista",
+            error: error.message
+        });
+    }
+}
 
 module.exports = {
     createList,
@@ -131,5 +160,6 @@ module.exports = {
     updateList,
     deleteList,
     getListsByUser,
-    addRecipeToList
+    addRecipeToList,
+    removeRecipeFromList
 };
