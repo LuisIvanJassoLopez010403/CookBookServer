@@ -39,7 +39,8 @@ const {
     updateList,
     deleteList,
     getListsByUser,
-    addRecipeToList
+    addRecipeToList,
+    removeRecipeFromList
 } = require('../controllers/lists.controller');
 
 const {
@@ -89,6 +90,7 @@ router.post('/update-list', authenticateToken, updateList);
 router.post('/delete-list', authenticateToken, deleteList);
 router.post('/get-user-lists', authenticateToken, getListsByUser);
 router.post('/add-recipe-to-list',authenticateToken,addRecipeToList);
+router.post('/remove-recipe-from-list',authenticateToken,removeRecipeFromList);
 
 router.post('/create-category', createCategory);
 router.post('/update-category', updateCategory);
