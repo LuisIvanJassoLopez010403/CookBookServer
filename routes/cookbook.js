@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const {authenticateToken} = require('../middlewares/auth.middleware');
+const {
+    authenticateToken,
+    authorizeRoles
+} = require('../middlewares/auth.middleware');
 
 const {
     signup,
