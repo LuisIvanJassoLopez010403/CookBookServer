@@ -125,7 +125,7 @@ async function addRecipeToList(req, res) {
 
 async function removeRecipeFromList(req, res) {
     try {
-        const { listId, recipeId } = req.params;
+        const { listId, recipeId } = req.body;
 
         const list = await listModel.findById(listId);
 
