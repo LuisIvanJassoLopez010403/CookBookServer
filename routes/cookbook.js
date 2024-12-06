@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const {authenticateToken} = require('../middlewares/auth.middleware');
+const {
+    authenticateToken
+} = require('../middlewares/auth.middleware');
 
 const {
     signup,
@@ -66,7 +68,7 @@ router.post('/delete-user',authenticateToken,deleteUser);
 router.get('/get-user-details',getUserDetails)
 router.post('/get-user',authenticateToken,getUserById)
 
-router.post('/create-recipe',authenticateToken,createRecipe);
+router.post('/create-recipe',authenticateToken, createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
 router.get('/get-all-recipes-by-category', getAllRecipesByCategory);
 router.post('/get-recipe', authenticateToken, getRecipe);
