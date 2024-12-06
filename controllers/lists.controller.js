@@ -103,11 +103,33 @@ async function getListsByUser(req, res) {
     }
 }
 
+async function addRecipeToList(req, res) {
+    try {
+        const { listId, recipeId } = req.body;
+
+        const existingList = await listModel.findById(listId);
+        if (!existingList) {
+            return res.status(404).json({ message: 'Lista no encontrada' });
+        }
+
+        if (!existingList.recipes.includes(recipeId)) {
+            existingList.recipes.push(recipeId);
+            await existingList.save();
+        }
+
+        res.status(200).json({ message: 'Receta agregada a la lista con éxito', list: existingList });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al agregar la receta a la lista', error: error.message });
+    }
+}
+
+
 module.exports = {
     createList,
     getAllLists,
     getListById,
     updateList,
     deleteList,
-    getListsByUser
+    getListsByUser,
+    addRecipeToList
 };

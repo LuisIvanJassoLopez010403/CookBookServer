@@ -36,7 +36,8 @@ const {
     getListById,
     updateList,
     deleteList,
-    getListsByUser
+    getListsByUser,
+    addRecipeToList
 } = require('../controllers/lists.controller');
 
 const {
@@ -85,6 +86,7 @@ router.get('/get-list', authenticateToken, getListById);
 router.post('/update-list', authenticateToken, updateList);
 router.post('/delete-list', authenticateToken, deleteList);
 router.post('/get-user-lists', authenticateToken, getListsByUser);
+router.post('/add-recipe-to-list',authenticateToken,addRecipeToList);
 
 router.post('/create-category', createCategory);
 router.post('/update-category', updateCategory);
