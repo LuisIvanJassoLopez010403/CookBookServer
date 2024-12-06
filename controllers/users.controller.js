@@ -29,8 +29,7 @@ async function signup(req, res) {
             username,
             password: hashedPassword,
             birthdate,
-            gender,
-            role: role || 'user'
+            gender
         });
 
         await newUser.save();
