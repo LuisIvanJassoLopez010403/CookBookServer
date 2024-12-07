@@ -109,7 +109,7 @@ async function getRecipe(req, res) {
             .populate([
                 { path: 'ingredients._idIngredient' }, 
                 { path: 'category' }, 
-                { path: 'autor', select: 'username' } 
+                { path: 'autor', select: 'username roll' } 
             ]);
 
         if (!recipe) {
