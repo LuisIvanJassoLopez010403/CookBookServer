@@ -127,31 +127,38 @@ async function removeRecipeFromList(req, res) {
     try {
         const { listId, recipeId } = req.body;
 
+        if (!listId || !recipeId) {
+            return res.status(400).json({ message: "listId y recipeId son requeridos" });
+        }
+
         const list = await listModel.findById(listId);
 
         if (!list) {
             return res.status(404).json({ message: "Lista no encontrada" });
         }
 
-        const recipeIndex = list.recipes.indexOf(recipeId);
+        const recipeIndex = list.recipes.findIndex(r => r.toString() === recipeId);
         if (recipeIndex === -1) {
             return res.status(404).json({ message: "Receta no encontrada en la lista" });
         }
 
-        list.recipes.splice(recipeIndex, 1); 
+        list.recipes.splice(recipeIndex, 1);
+
         await list.save();
 
         return res.status(200).json({
             message: "Receta eliminada de la lista exitosamente",
-            list: list
+            list
         });
     } catch (error) {
+        console.error("Error al eliminar la receta:", error);
         return res.status(500).json({
             message: "Error al eliminar la receta de la lista",
             error: error.message
         });
     }
 }
+
 
 module.exports = {
     createList,
