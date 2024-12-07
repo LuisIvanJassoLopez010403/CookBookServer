@@ -38,6 +38,10 @@ const usersSchema = new mongoose.Schema({
     is_deleted: {
         type: Boolean,
         default: false
+    },
+    roll: {
+        type: String,
+        default: "user"
     }
 });
 

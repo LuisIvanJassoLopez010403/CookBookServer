@@ -81,7 +81,6 @@ async function updateRecipe(req, res) {
 async function deleteRecipe(req, res) {
     try {
         const { id } = req.body;
-        const userId = req.user.userId;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'ID de receta inválido' });
@@ -91,10 +90,6 @@ async function deleteRecipe(req, res) {
 
         if (!deletedRecipe) {
             return res.status(404).json({ message: 'Receta no encontrada' });
-        }
-
-        if (deletedRecipe.autor.toString() !== userId) {
-            return res.status(403).json({ message: 'No tienes permiso para eliminar esta receta' });
         }
 
         res.status(200).json({ message: 'Receta eliminada exitosamente' });
