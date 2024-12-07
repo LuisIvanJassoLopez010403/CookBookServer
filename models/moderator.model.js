@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const usersSchema = new mongoose.Schema({
+const moderatorSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
@@ -11,15 +11,15 @@ const usersSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false
     },
     birthdate: {
         type: String,
-        required: true
+        required: false
     },
     gender: {
         type: String,
-        required: true
+        required: false
     },
     bio: {
         type: String
@@ -38,15 +38,11 @@ const usersSchema = new mongoose.Schema({
     is_deleted: {
         type: Boolean,
         default: false
-    },
-    roll: {
-        type: String,
-        default: "user"
     }
 });
 
-const usersModel = mongoose.model('Users', usersSchema);
+const moderatorsModel = mongoose.model('Moderator', moderatorSchema);
 
 module.exports = {
-    usersModel
+    moderatorsModel
 };

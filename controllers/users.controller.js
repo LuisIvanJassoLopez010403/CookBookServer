@@ -24,13 +24,22 @@ async function signup(req, res) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new usersModel({
-            email,
-            username,
-            password: hashedPassword,
-            birthdate,
-            gender
-        });
+        let newUser;
+        if (roll === 'moderator') {
+            newUser = new moderatorsModel({
+                email,
+                username
+            });
+        } else {
+            newUser = new usersModel({
+                email,
+                username,
+                password: hashedPassword,
+                birthdate,
+                gender,
+                roll
+            });
+        }
 
         await newUser.save();
 
