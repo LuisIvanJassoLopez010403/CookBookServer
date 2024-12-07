@@ -52,6 +52,7 @@ async function createRecipe(req, res) {
         res.status(201).json({ message: 'Receta creada exitosamente', receta: newReceta });
     } catch (error) {
         res.status(500).json({ error: 'Error en el servidor.', details: error.message });
+        console.log(error);
     }
 };
 
