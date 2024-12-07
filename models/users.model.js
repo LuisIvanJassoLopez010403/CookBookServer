@@ -39,10 +39,10 @@ const usersSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    roll: {
-        type: String,
-        default: "user"
-    }
+    //roll: {
+    //    type: String,
+    //    default: "user"
+    //}
 });
 
 const usersModel = mongoose.model('Users', usersSchema);
