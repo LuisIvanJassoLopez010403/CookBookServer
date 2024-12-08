@@ -70,7 +70,7 @@ router.post('/get-user',authenticateToken,getUserById)
 
 router.post('/create-recipe',authenticateToken, createRecipe);
 router.get('/get-all-recipes', getAllRecipes);
-router.get('/get-all-recipes-by-category', getAllRecipesByCategory);
+router.get('/get-all-recipes-by-category', authenticateToken, getAllRecipesByCategory);
 router.post('/get-recipe', authenticateToken, getRecipe);
 router.post('/update-recipe', updateRecipe);
 router.post('/delete-recipe', authenticateToken, deleteRecipe);
