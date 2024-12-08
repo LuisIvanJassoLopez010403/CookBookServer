@@ -88,23 +88,29 @@ async function getIngredientById(req, res) {
 }
 
 
-// Actualizar un ingrediente
 async function updateIngredient(req, res) {
     try {
-        const { id } = req.body;
+        const { id, nameIngredient, category, icon } = req.body;
 
-        const existingIngredient = await ingredientsModel.findById(id);
-        if (!existingIngredient) {
+        const updatedIngredient = await ingredientsModel.findByIdAndUpdate(
+            id,
+            { nameIngredient, category, icon },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedIngredient) {
             return res.status(404).json({ error: 'Ingrediente no encontrado.' });
         }
 
-        await existingIngredient.save();
-
-        res.status(200).json({ message: 'Ingrediente actualizado exitosamente.' });
+        res.status(200).json({
+            message: 'Ingrediente actualizado exitosamente.',
+            ingredient: updatedIngredient
+        });
     } catch (error) {
-        res.status(500).json({ error: 'Error en el servidor.' });
+        res.status(500).json({ error: 'Error en el servidor.', details: error.message });
     }
 }
+
 
 async function deleteIngredient(req, res) {
     try {
