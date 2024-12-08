@@ -99,7 +99,7 @@ router.get('/get-category', getCategory);
 router.get('/get-all-categories', getAllCategories);
 
 router.post('/search-recipe',searchRecipes)
-router.post('/search-specified-recipe',searchSpecifiedRecipes);
+router.post('/search-specified-recipe', authenticateToken, searchSpecifiedRecipes);
 
 router.post('/view-history',authenticateToken,viewHistory);
 
