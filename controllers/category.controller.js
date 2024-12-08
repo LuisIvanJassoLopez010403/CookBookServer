@@ -53,7 +53,7 @@ async function getCategory (req, res){
     try{
         const category = await categoryModel.findById(req.body.id);
         if (!category){
-            return res.status(404).json({ message: 'Receta no encontrada' });
+            return res.status(404).json({ message: 'Categoria no encontrada' });
         }
         res.status(200).json(category);
     } catch (error){
@@ -65,7 +65,7 @@ async function getAllCategories (req, res){
     try{
         const categories = await categoryModel.find();
         if (!categories){
-            return res.status(404).json({ message: 'Recetas no encontradas' });
+            return res.status(404).json({ message: 'Categorias no encontradas' });
         }
         res.status(200).json(categories);
     } catch (error){
