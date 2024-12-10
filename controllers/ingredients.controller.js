@@ -60,7 +60,18 @@ const getAllIngredientsGroupedByCategory = async (req, res) => {
                 }
             },
             {
-                $sort: { category: 1 }
+                $addFields: {
+                    sortOrder: {
+                        $cond: {
+                            if: { $eq: ['$category', 'Protein'] },
+                            then: 0,
+                            else: 1
+                        }
+                    }
+                }
+            },
+            {
+                $sort: { sortOrder: 1, category: 1 }
             }
         ]);
 
