@@ -1,0 +1,151 @@
+const { ingredientsModel } = require('../models/ingredients.model');
+
+async function createIngredient(req, res) {
+    try {
+        const { nameIngredient, category } = req.body;
+
+        if (!nameIngredient || !category) {
+            return res.status(400).json({ error: 'Todos los campos son requeridos.' });
+        }
+        
+        const existingIngredient = await ingredientsModel.findOne({ nameIngredient });
+        if (existingIngredient) {
+            return res.status(400).json({ error: 'El ingrediente ya existe.' });
+        }
+
+        const newIngredient = new ingredientsModel({
+            nameIngredient,
+            category
+        });
+
+        await newIngredient.save();
+
+        res.status(201).json({ message: 'Ingrediente creado exitosamente.', ingredientId: newIngredient._id });
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
+// Obtener todos los ingredientes
+const getAllIngredients = async (req, res) => {
+    try {
+        const ingredients = await ingredientsModel.find();
+        res.status(200).json(ingredients);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Obtener todos los ingredientes agrupados por categoria
+const getAllIngredientsGroupedByCategory = async (req, res) => {
+    try {
+        const ingredients = await ingredientsModel.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    ingredients: { 
+                        $push: {
+                            _id: '$_id',
+                            nameIngredient: '$nameIngredient',
+                            icon: '$icon'
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$_id',
+                    ingredients: 1
+                }
+            },
+            {
+                $addFields: {
+                    sortOrder: {
+                        $cond: {
+                            if: { $eq: ['$category', 'Protein'] },
+                            then: 0,
+                            else: 1
+                        }
+                    }
+                }
+            },
+            {
+                $sort: { sortOrder: 1, category: 1 }
+            }
+        ]);
+
+        res.status(200).json(ingredients);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// Obtener un ingrediente por ID
+async function getIngredientById(req, res) {
+    try {
+        const { id } = req.body;
+
+        // Verificar si el ID es válido y si el ingrediente existe
+        const ingredient = await ingredientsModel.findById(id);
+        if (!ingredient) {
+            return res.status(404).json({ error: 'Ingrediente no encontrado.' });
+        }
+
+        res.status(200).json({ ingredient });
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
+
+async function updateIngredient(req, res) {
+    try {
+        const { id, nameIngredient, category, icon } = req.body;
+
+        const updatedIngredient = await ingredientsModel.findByIdAndUpdate(
+            id,
+            { nameIngredient, category, icon },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedIngredient) {
+            return res.status(404).json({ error: 'Ingrediente no encontrado.' });
+        }
+
+        res.status(200).json({
+            message: 'Ingrediente actualizado exitosamente.',
+            ingredient: updatedIngredient
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.', details: error.message });
+    }
+}
+
+
+async function deleteIngredient(req, res) {
+    try {
+        const { id } = req.body;
+
+        const ingredient = await ingredientsModel.findByIdAndDelete(id);
+
+        if (!ingredient) {
+            return res.status(404).json({ error: 'Ingrediente no encontrado.' });
+        }
+
+        res.status(200).json({ message: 'Ingrediente eliminado exitosamente.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
+
+
+module.exports = {
+    getAllIngredients,
+    getAllIngredientsGroupedByCategory,
+    getIngredientById,
+    createIngredient,
+    updateIngredient,
+    deleteIngredient
+};

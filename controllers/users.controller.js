@@ -62,7 +62,7 @@ async function login(req, res) {
         }
 
         const token = jwt.sign(
-            { userId: user._id, username: user.username, email: user.email },
+            { userId: user._id, username: user.username, email: user.email, roll: user.roll },
             JWT_SECRET,
             { expiresIn: '1h' } 
         );
@@ -75,28 +75,40 @@ async function login(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { userId } = req.params;
-        const { email, username, birthdate, gender, bio, profile_picture } = req.body;
+        const { userId, email, username, birthdate, gender, bio, profile_picture } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'El ID del usuario es obligatorio.' });
+        }
+
+        const updates = { email, username, birthdate, gender, bio, profile_picture };
+
+        const validUpdates = Object.fromEntries(
+            Object.entries(updates).filter(([_, value]) => value !== undefined)
+        );
 
         const updatedUser = await usersModel.findByIdAndUpdate(
             userId,
-            { email, username, birthdate, gender, bio, profile_picture },
+            validUpdates,
             { new: true, runValidators: true }
         );
 
         if (!updatedUser) {
             return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
+
         res.status(200).json({ message: 'Usuario actualizado exitosamente.', user: updatedUser });
 
     } catch (error) {
+        console.error('Error al actualizar el usuario:', error);
         res.status(500).json({ error: 'Error en el servidor.' });
     }
 }
 
+
 async function deleteUser(req, res) {
     try {
-        const { userId } = req.params;
+        const { userId } = req.body;
 
         const deletedUser = await usersModel.findByIdAndUpdate(
             userId,
@@ -114,17 +126,56 @@ async function deleteUser(req, res) {
     }
 }
 
-async function getUserLists(req, res) {
+async function getUserDetails(req, res) {
     try {
-        const userId = req.user.userId;
+        const { username, password } = req.body;
 
-        const user = await usersModel.findById(userId).populate('created_lists');
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Nombre de usuario y contraseña son requeridos.' });
+        }
 
+        const user = await usersModel.findOne({ username });
+
+        if (!user || user.is_deleted) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        const userData = {
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            birthdate: user.birthdate,
+            gender: user.gender,
+            bio: user.bio,
+            profile_picture: user.profile_picture,
+            created_recipes: user.created_recipes,
+            created_lists: user.created_lists
+        };
+
+        res.status(200).json({ message: 'Detalles del usuario obtenidos exitosamente.', user: userData });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+}
+
+async function getUserById(req, res) {
+    try {
+        const { userId } = req.body;
+
+        const user = await usersModel.findById(userId).select('-password');
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
 
-        res.status(200).json({ lists: user.created_lists });
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ error: 'Error en el servidor.' });
     }
@@ -135,6 +186,7 @@ module.exports = {
     login,
     updateUser,
     deleteUser,
-    getUserLists
+    getUserDetails,
+    getUserById
 };
 

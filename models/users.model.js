@@ -14,7 +14,7 @@ const usersSchema = new mongoose.Schema({
         required: true
     },
     birthdate: {
-        type: Date,
+        type: String,
         required: true
     },
     gender: {
@@ -38,6 +38,10 @@ const usersSchema = new mongoose.Schema({
     is_deleted: {
         type: Boolean,
         default: false
+    },
+    roll: {
+        type: String,
+        default: "user"
     }
 });
 

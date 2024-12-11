@@ -4,17 +4,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser'); // Agrega body-parser
+
+
 const { mongoURL } = require('./config').variablesDeConfiguracion;
 
 const databaseUrl = mongoURL;
 
-// Conexión a MongoDB Atlas
-mongoose.connect(databaseUrl);
-mongoose.connection.on('open', function () {
-  console.log('Conexión exitosa a MongoDB Atlas');
+
+mongoose.connect(databaseUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
-mongoose.connection.on('error', function (error) {
-  console.error('Error conectando a MongoDB Atlas:', error.message);
+
+mongoose.connection.on('open', function () {
+  console.log("Connection OK");
+
 });
 
 var indexRouter = require('./routes/index');
@@ -28,8 +33,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Configuración de tamaño máximo permitido
+app.use(bodyParser.json({ limit: '20mb' }));  // <---- AQUI
+app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -9,9 +9,9 @@ function authenticateToken(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token.split(' ')[1], JWT_SECRET); // El token se envía como 'Bearer token'
-        req.user = decoded; // Añadir el usuario decodificado al request
-        next(); // Pasar al siguiente middleware o ruta
+        const decoded = jwt.verify(token.split(' ')[1], JWT_SECRET); 
+        req.user = decoded; 
+        next();
     } catch (error) {
         res.status(403).json({ error: 'Token no válido.' });
     }

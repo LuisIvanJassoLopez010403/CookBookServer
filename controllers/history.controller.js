@@ -1,54 +1,59 @@
 const { historyModel } = require('../models/history.model');
 
-// Crear una nueva entrada en el historial
-async function createHistory(req, res) {
-  const { idUser, idRecipe, action } = req.body;
+async function getHistory(req, res) {
+    const idrecipe = req.body.idrecipe;
+    const iduser = req.user.id;
 
-  try {
-    const newHistory = new historyModel({
-      idUser,
-      idRecipe,
-      action
-    });
+    try {
+        let userHistory = await historyModel.findOne({ userId: iduser });
+        
+        if (!userHistory) {
+            userHistory = new historyModel({
+                userId: iduser,
+                recipeHistory: [{ recipeId: idrecipe }]  
+            });
+        } else {
+            userHistory.recipeHistory.push({
+                recipeId: idrecipe,
+                date: Date.now()
+            });
+        }
 
-    await newHistory.save();
-    res.status(201).json({ message: 'Historial registrado con éxito' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al registrar el historial' });
-  }
+        await userHistory.save();
+        res.status(201).json({ message: 'Receta agregada al historial', history: userHistory });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al agregar la receta', error: error.message });
+    }
 };
 
-// Obtener el historial de un usuario
-async function getUserHistory(req, res) {
-  const { userId } = req.params;
+async function viewHistory(req, res) {
+    const iduser = req.body.id;
 
-  try {
-    const history = await historyModel.find({ idUser: userId }).populate('idRecipe');
-    res.status(200).json(history);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el historial' });
-  }
-};
+    try {
+        const history = await historyModel.find({ userId: iduser })
+            .populate('recipeHistory.recipeId')
+            .lean();
 
-// Servicio para mostrar el historial de recetas que ha visto el usuario (punto 7)
-async function getUserViewedRecipes(req, res) {
-  const { userId } = req.params;
+        if (!history || history.length === 0) {
+            console.log('User ID:', iduser);
+            return res.status(404).json({ message: 'No se encontró historial para este usuario.' });
+        }
 
-  try {
-    const viewedRecipes = await historyModel.find({       // Buscar las entradas del historial donde el usuario ha visto recetas (action = "VIEWED")
-      idUser: userId,
-      action: 'VIEWED'                                    // se filtra por la accion de visualizacion
-    }).populate('idRecipe'); 
-    
-    // Enviar el historial de recetas vistas 
-    res.status(200).json(viewedRecipes);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el historial de recetas vistas' });
-  }
-};
+        const sortedHistory = history.map(userHistory => ({
+            ...userHistory,
+            recipeHistory: userHistory.recipeHistory.sort((a, b) => new Date(b.date) - new Date(a.date))
+        }));
+
+        res.status(200).json(sortedHistory);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el historial', error: error.message });
+    }
+}
+
+
 
 module.exports = {
-  createHistory,
-  getUserHistory,
-  getUserViewedRecipes 
-};
+    getHistory,
+    viewHistory
+}
+  

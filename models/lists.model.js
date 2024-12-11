@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const listSchema = new mongoose.Schema({
-  name: {
+  nameList: {
     type: String,
     required: true
   },
@@ -12,12 +12,16 @@ const listSchema = new mongoose.Schema({
     type: String
   },
   recipes: {
+
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Recipe",
+    required: true
+  },
+  autor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Recipe"
-  }, 
-  recetaDefault: {
-    type: Boolean, 
-    default: false
+    ref: 'Users',
+    required: true
+
   }
 });
 

@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
-const {
-    CategoriaModel
-} = require('./categorias.model');
 
 const IngredientsSchema = new mongoose.Schema({
     _idIngredient:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ingredient',
+        ref: 'Ingredients',
         required: true
     },
     unit: {
@@ -24,8 +21,12 @@ const recipeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    preptime: {
+    description: {
         type: String,
+        required: true
+    },
+    preptime: {
+        type: Number,
         required: true
     },
     ingredients: {
@@ -33,35 +34,36 @@ const recipeSchema = new mongoose.Schema({
         required: true
     },
     steps: {
-        type: [String],
+        type: String,
+        required: true
+    },
+    createdDate: {
+        type: Date,
+        required: true
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
+    autor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Users',
         required: true
     },
     image: {
-        type: String,
-        required: true
+        type: String
     },
     video: {
         type: String
     },
-    Categoria: {
-        type: CategoriaModel,
-        required: true
-    },
-    //autor: {
-
-    //}
-    Calificacion: {
-        type: Number,
-        required: true
-    },
-    Fecha: {
-        type: Date,
-        required: true
+    grade: {
+        type: Number
     }
 });
 
-const RecipeModel = mongoose.model('Recipe', recipeSchema);
+const recipeModel = mongoose.model('Recipe', recipeSchema);
 
 module.exports = {
-    RecipeModel
+    recipeModel
 }
