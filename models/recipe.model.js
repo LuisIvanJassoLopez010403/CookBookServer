@@ -12,7 +12,7 @@ const IngredientsSchema = new mongoose.Schema({
     unit: {
         type: String,
         required: true
-    },
+    }, 
     amount:{
         type: Number,
         required: true

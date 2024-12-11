@@ -1,6 +1,6 @@
 const variablesDeConfiguracion = {
-    mongoURL: process.env.MONGO_URL
-}
+    mongoURL: 'mongodb+srv://MauCarreon11:MauriC123@cookbook.icccf.mongodb.net/?retryWrites=true&w=majority&appName=CookBook'
+};
 
 module.exports = {
     variablesDeConfiguracion
