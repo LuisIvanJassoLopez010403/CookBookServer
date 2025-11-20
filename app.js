@@ -4,7 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser'); // Agrega body-parser
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const { mongoURL } = require('./config').variablesDeConfiguracion;
 
@@ -25,6 +26,11 @@ const cookbookRouter = require('./routes/cookbook');
 
 var app = express();
 
+app.use(cors({
+  origin: ['https://cookbook.virtualkick.mx', 'http://localhost:3000'],
+  credentials: true
+}));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -32,7 +38,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 // Configuración de tamaño máximo permitido
-app.use(bodyParser.json({ limit: '20mb' }));  // <---- AQUI
+app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
 app.use(cookieParser());
