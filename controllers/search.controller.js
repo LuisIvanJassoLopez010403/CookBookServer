@@ -11,7 +11,10 @@ async function searchSpecifiedRecipes(req, res) {
         }
 
         if (ingredients && ingredients.length > 0) {
-            query['ingredients._idIngredient'] = { $all: ingredients.map(id => new mongoose.Types.ObjectId(id)) };
+            // Búsqueda exacta: la receta debe tener exactamente estos ingredientes
+            const ingredientIds = ingredients.map(id => new mongoose.Types.ObjectId(id));
+            query['ingredients._idIngredient'] = { $all: ingredientIds };
+            query['ingredients'] = { $size: ingredients.length };
         }
 
         if (category && category.length > 0) {
@@ -19,7 +22,7 @@ async function searchSpecifiedRecipes(req, res) {
         }
 
         if (nameRecipe) {
-            query['nameRecipe'] = { $regex: nameRecipe, $options: 'i'};
+            query['nameRecipe'] = { $regex: nameRecipe, $options: 'i' };
         }
 
         const recipes = await recipeModel.find(query).populate('ingredients._idIngredient category');
@@ -41,15 +44,16 @@ async function searchRecipes(req, res) {
         }
 
         if (ingredients && ingredients.length > 0) {
-            query['ingredients._idIngredient'] = { $in: ingredients.map(id => new mongoose.Types.ObjectId(id)) };
+            // Búsqueda inclusiva: la receta debe tener AL MENOS estos ingredientes (puede tener más)
+            query['ingredients._idIngredient'] = { $all: ingredients.map(id => new mongoose.Types.ObjectId(id)) };
         }
 
         if (category) {
-            query['category'] = { $in: category.map(id = new mongoose.Types.ObjectId(id)) };
+            query['category'] = { $in: category.map(id => new mongoose.Types.ObjectId(id)) };
         }
 
         if (nameRecipe) {
-            query['nameRecipe'] = { $regex: nameRecipe, $options: 'i'};
+            query['nameRecipe'] = { $regex: nameRecipe, $options: 'i' };
         }
 
         const recipes = await recipeModel.find(query).populate('ingredients._idIngredient category');
@@ -61,7 +65,7 @@ async function searchRecipes(req, res) {
     }
 }
 
-module.exports = { 
+module.exports = {
     searchRecipes,
     searchSpecifiedRecipes
 };
