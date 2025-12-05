@@ -85,7 +85,7 @@ router.post('/delete-ingredient', deleteIngredient);
 
 router.post('/create-list', authenticateToken, createList);
 router.get('/get-all-lists', getAllLists);
-router.get('/get-list', authenticateToken, getListById);
+router.post('/get-list', authenticateToken, getListById);
 router.post('/update-list', authenticateToken, updateList);
 router.post('/delete-list', authenticateToken, deleteList);
 router.post('/get-user-lists', authenticateToken, getListsByUser);
