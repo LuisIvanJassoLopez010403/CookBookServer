@@ -33,19 +33,19 @@ async function createRecipe(req, res) {
         if (!autor) {
             return res.status(400).json({ message: 'La receta debe de llevar autor' });
         }
-        
+
 
         const newReceta = new recipeModel({
             nameRecipe,
             description,
             preptime,
-            ingredients,  
+            ingredients,
             steps,
             createdDate,
             category: new mongoose.Types.ObjectId(category),
             autor: new mongoose.Types.ObjectId(autor),
             image,
-            video 
+            video
         });
 
         await newReceta.save();
@@ -85,7 +85,7 @@ async function deleteRecipe(req, res) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'ID de receta inválido' });
-        }   
+        }
 
         const deletedRecipe = await recipeModel.findByIdAndDelete(id);
 
@@ -100,16 +100,16 @@ async function deleteRecipe(req, res) {
 };
 
 async function getRecipe(req, res) {
-    const userId = req.body.userId;  
-    const recipeId = req.body.id;  
+    const userId = req.body.userId;
+    const recipeId = req.body.id;
 
     try {
         const recipe = await recipeModel
             .findById(recipeId)
             .populate([
-                { path: 'ingredients._idIngredient' }, 
-                { path: 'category' }, 
-                { path: 'autor', select: 'username roll' } 
+                { path: 'ingredients._idIngredient' },
+                { path: 'category' },
+                { path: 'autor', select: 'username roll' }
             ]);
 
         if (!recipe) {
@@ -119,9 +119,9 @@ async function getRecipe(req, res) {
         let currentHistory = await historyModel.findOne({ userId: userId });
         if (!currentHistory) {
             currentHistory = new historyModel({
-                userId: userId,  
+                userId: userId,
                 recipeHistory: [{
-                    recipeId: recipeId,  
+                    recipeId: recipeId,
                     date: Date.now()
                 }]
             });
@@ -155,7 +155,7 @@ async function getAllRecipes(req, res) {
 };
 
 const getAllRecipesByCategory = async (req, res) => {
-    try{
+    try {
         const ingredients = await recipeModel.aggregate([
             {
                 $lookup: {
